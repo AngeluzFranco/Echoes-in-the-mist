@@ -4,8 +4,9 @@ public class CoinManager : MonoBehaviour
 {
     public static CoinManager Instance { get; private set; }
     private int coins;
-    private int maxCoins = 100;
+    private int maxCoins = 5;
     public GameObject coinPrefab;
+    public Vector3[] coinPositions;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -25,12 +26,12 @@ public class CoinManager : MonoBehaviour
     }
     void Start()
     {
-        for (int x = 0; x < 5; x++)
+        if (coinPositions != null && coinPositions.Length > 0)
         {
-            for (int y = 0; y < 5; y++)
+            foreach (var pos in coinPositions)
             {
                 var instance = Instantiate(coinPrefab);
-                instance.transform.position = new Vector3(x, 1.5f, y);
+                instance.transform.position = pos;
             }
         }
 

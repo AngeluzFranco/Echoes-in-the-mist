@@ -300,7 +300,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44d68797e44026a45a84de6755844622, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenu
-  gameSceneName: Physics
+  gameSceneName: FirstWorld
 --- !u!1 &264846130
 GameObject:
   m_ObjectHideFlags: 0

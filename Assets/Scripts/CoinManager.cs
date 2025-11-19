@@ -27,8 +27,13 @@ public class CoinManager : MonoBehaviour
     {
         coins = Mathf.Min(maxCoins, coins + amount);
         Debug.Log($"Total coins: {coins}");
-
-       
+        
+        // Actualizar el UI de coins
+        var engraneUI = FindObjectOfType<EngraneUI>();
+        if (engraneUI != null)
+        {
+            engraneUI.UpdateCoins(coins, maxCoins);
+        }
     }
     void Start()
     {

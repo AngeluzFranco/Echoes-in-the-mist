@@ -2,6 +2,12 @@ using UnityEngine;
 
 public class CoinManager : MonoBehaviour
 {
+
+
+    public int GetCoinCount()
+    {
+        return coins;
+    }
     public static CoinManager Instance { get; private set; }
     private int coins;
     private int maxCoins = 5;
@@ -19,7 +25,7 @@ public class CoinManager : MonoBehaviour
 
     public void AddCoins(int amount)
     {
-        coins += Mathf.Min(maxCoins, coins + amount);
+        coins = Mathf.Min(maxCoins, coins + amount);
         Debug.Log($"Total coins: {coins}");
 
        

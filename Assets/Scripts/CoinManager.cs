@@ -2,17 +2,43 @@ using UnityEngine;
 
 public class CoinManager : MonoBehaviour
 {
-
+    public static CoinManager Instance { get; private set; }
+    private int coins;
+    private int maxCoins = 1;
+    public GameObject coinPrefab;
+    public Vector3[] coinPositions;
 
     public int GetCoinCount()
     {
         return coins;
     }
-    public static CoinManager Instance { get; private set; }
-    private int coins;
-    private int maxCoins = 5;
-    public GameObject coinPrefab;
-    public Vector3[] coinPositions;
+    
+    public int GetMaxCoins()
+    {
+        return maxCoins;
+    }
+    
+    public void SetMaxCoins(int max)
+    {
+        maxCoins = max;
+        Debug.Log($"Límite de coins ajustado a: {maxCoins}");
+        UpdateUI();
+    }
+    
+    public void ResetCoins()
+    {
+        coins = 0;
+        UpdateUI();
+    }
+    
+    private void UpdateUI()
+    {
+        var engraneUI = FindFirstObjectByType<EngraneUI>();
+        if (engraneUI != null)
+        {
+            engraneUI.UpdateCoins(coins, maxCoins);
+        }
+    }
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -26,13 +52,14 @@ public class CoinManager : MonoBehaviour
     public void AddCoins(int amount)
     {
         coins = Mathf.Min(maxCoins, coins + amount);
-        Debug.Log($"Total coins: {coins}");
+        Debug.Log($"Total coins: {coins}/{maxCoins}");
         
-        // Actualizar el UI de coins
-        var engraneUI = FindObjectOfType<EngraneUI>();
-        if (engraneUI != null)
+        UpdateUI();
+        
+        // Verificar si se completaron todos los engranes
+        if (coins >= maxCoins)
         {
-            engraneUI.UpdateCoins(coins, maxCoins);
+            Debug.Log("¡Todos los engranes recolectados! Busca el portal para el siguiente nivel.");
         }
     }
     void Start()

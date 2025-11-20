@@ -26,6 +26,14 @@ public class Health : MonoBehaviour
     public void Heal(float amount)
     {
         currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+        onHealthChange?.Invoke(currentHealth, maxHealth);
+    }
+    
+    public void ResetHealth()
+    {
+        currentHealth = maxHealth;
+        onHealthChange?.Invoke(currentHealth, maxHealth);
+        Debug.Log("Salud reiniciada al máximo");
     }
 
     private void OnTriggerEnter(Collider other)

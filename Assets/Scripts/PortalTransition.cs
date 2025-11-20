@@ -22,14 +22,22 @@ public class PortalTransition : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            if (CoinManager.Instance != null && CoinManager.Instance.GetCoinCount() >= requiredCoins)
+            if (CoinManager.Instance != null && CoinManager.Instance.GetCoinCount() >= CoinManager.Instance.GetMaxCoins())
             {
-                Debug.Log("¡Nivel completado! Transición al siguiente nivel.");
-                SceneManager.LoadScene("Navigation");
+                if (LevelManager.Instance != null)
+                {
+                    LevelManager.Instance.CompleteLevel(nextSceneName);
+                }
+                else
+                {
+                    SceneManager.LoadScene(nextSceneName);
+                }
             }
             else
             {
-                Debug.Log("No tienes suficientes piezas para pasar el nivel.");
+                int current = CoinManager.Instance ? CoinManager.Instance.GetCoinCount() : 0;
+                int required = CoinManager.Instance ? CoinManager.Instance.GetMaxCoins() : 0;
+                Debug.Log($"Necesitas recolectar todos los engranes para pasar. Tienes {current}/{required}");
             }
         }
     }

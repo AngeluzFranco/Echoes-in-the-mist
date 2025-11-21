@@ -8,6 +8,10 @@ public class LevelManager : MonoBehaviour
     [Header("Level Settings")]
     public float playerMaxHealth = 100f;
     
+    [Header("UI Prefabs")]
+    public GameObject pauseMenuPrefab;
+    private GameObject pauseMenuInstance;
+    
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -18,6 +22,7 @@ public class LevelManager : MonoBehaviour
         
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        EnsurePauseMenu();
     }
     
     private void Start()
@@ -48,6 +53,17 @@ public class LevelManager : MonoBehaviour
     
     private void SetupLevel()
     {
+        EnsurePauseMenu();
+        
+        // Eliminar duplicados si los hay
+        var menus = FindObjectsByType<PauseMenu>(FindObjectsSortMode.None);
+        foreach (var m in menus)
+        {
+            if (pauseMenuInstance && m.gameObject != pauseMenuInstance)
+            {
+                Destroy(m.gameObject);
+            }
+        }
         int gearsInLevel = 0;
         
         // Método 1: Intentar encontrar por tag "Coin" (si existe)
@@ -99,6 +115,33 @@ public class LevelManager : MonoBehaviour
         }
         
         Debug.Log($"Nivel configurado: {gearsInLevel} engranes disponibles");
+    }
+
+    private void EnsurePauseMenu()
+    {
+        if (pauseMenuInstance == null)
+        {
+            var existing = FindFirstObjectByType<PauseMenu>(FindObjectsInactive.Include);
+            if (existing)
+            {
+                pauseMenuInstance = existing.gameObject;
+            }
+            else if (pauseMenuPrefab != null)
+            {
+                pauseMenuInstance = Instantiate(pauseMenuPrefab);
+            }
+            if (pauseMenuInstance)
+            {
+                var pm = pauseMenuInstance.GetComponent<PauseMenu>();
+                if (pm) pm.HideImmediately();
+                DontDestroyOnLoad(pauseMenuInstance);
+            }
+        }
+        else
+        {
+            var pm = pauseMenuInstance.GetComponent<PauseMenu>();
+            if (pm) pm.HideImmediately();
+        }
     }
     
     public void CompleteLevel(string nextSceneName)

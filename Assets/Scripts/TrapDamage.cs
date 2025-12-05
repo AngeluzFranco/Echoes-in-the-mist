@@ -2,15 +2,21 @@ using UnityEngine;
 
 public class TrapDamage : MonoBehaviour
 {
-    public int damage = 20;
+    public float damageAmount = 10f;
+    public float damageInterval = 1f; // Daño cada 1 segundo
+    private float nextDamageTime = 0f;
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
-        PlayerHealth health = other.GetComponent<PlayerHealth>();
-
-        if (health != null)
+        if (other.CompareTag("Player") && Time.time >= nextDamageTime)
         {
-            health.TakeDamage(damage);
+            PlayerHealth health = other.GetComponent<PlayerHealth>();
+
+            if (health != null)
+            {
+                health.TakeDamage(damageAmount);
+                nextDamageTime = Time.time + damageInterval; // Reiniciar timer de daño
+            }
         }
     }
 }

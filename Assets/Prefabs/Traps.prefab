@@ -167,10 +167,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8625134804282770638}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -199,7 +199,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dbe94e75ec42d7418e4e42df04cbb2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 20
+  damageAmount: 10
+  damageInterval: 1
 --- !u!1001 &5503692073057780796
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -311,7 +312,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dbe94e75ec42d7418e4e42df04cbb2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 20
+  damageAmount: 10
+  damageInterval: 1
 --- !u!54 &1629293864829432839
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -319,10 +321,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629164036530368582}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -492,10 +494,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2103481328459319065}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -524,7 +526,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dbe94e75ec42d7418e4e42df04cbb2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 20
+  damageAmount: 10
+  damageInterval: 1
 --- !u!4 &4454967472278870460 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7221556997212072671, guid: 0c0a455573ee5844fa5d36c2ede306e3, type: 3}
@@ -662,10 +665,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3358442244222850016}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -694,4 +697,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dbe94e75ec42d7418e4e42df04cbb2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 20
+  damageAmount: 10
+  damageInterval: 1

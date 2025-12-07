@@ -15,7 +15,7 @@ public class EnemyController : MonoBehaviour
     private Animator animator;
 
     // --- AJUSTES DE ATAQUE ---
-    public float damageAmount = 10f;
+    public int damageAmount = 10;
     public Collider swordHitCollider;
     public LayerMask playerLayer;
 
@@ -69,7 +69,7 @@ public class EnemyController : MonoBehaviour
             agent.SetDestination(target.position);
 
             float speed = agent.velocity.magnitude;
-            animator.SetFloat("Velocidad", speed / agent.speed);
+            animator.SetFloat("Velocidad", speed / Mathf.Max(agent.speed, 0.0001f));
         }
         else
         {
@@ -77,13 +77,13 @@ public class EnemyController : MonoBehaviour
         }
 
         // --- PATRULLAJE ---
-        if (!isChasingPlayer && patrolPoints.Length > 0)
+        if (!isChasingPlayer && patrolPoints != null && patrolPoints.Length > 0)
         {
             Patrolling();
         }
 
         // --- IDLE ---
-        if (!isChasingPlayer && patrolPoints.Length == 0)
+        if (!isChasingPlayer && (patrolPoints == null || patrolPoints.Length == 0))
         {
             if (agent.hasPath) agent.ResetPath();
             animator.SetFloat("Velocidad", 0f);
@@ -95,6 +95,8 @@ public class EnemyController : MonoBehaviour
     // --- DETECCIÓN ---
     bool IsPlayerInSight()
     {
+        if (target == null) return false;
+
         float distanceToTarget = Vector3.Distance(transform.position, target.position);
         if (distanceToTarget > detectionRadius)
             return false;
@@ -119,6 +121,8 @@ public class EnemyController : MonoBehaviour
     // --- ATAQUE ---
     void AttackPlayer()
     {
+        if (target == null) return;
+
         Vector3 direction = (target.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
@@ -168,7 +172,7 @@ public class EnemyController : MonoBehaviour
     // --- PATRULLAJE CON NAVMESH ---
     void Patrolling()
     {
-        if (patrolPoints.Length == 0) return;
+        if (patrolPoints == null || patrolPoints.Length == 0) return;
 
         agent.speed = patrolSpeed;
 
@@ -189,6 +193,6 @@ public class EnemyController : MonoBehaviour
         }
 
         float speed = agent.velocity.magnitude;
-        animator.SetFloat("Velocidad", speed / agent.speed);
+        animator.SetFloat("Velocidad", speed / Mathf.Max(agent.speed, 0.0001f));
     }
 }

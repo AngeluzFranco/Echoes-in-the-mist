@@ -1,23 +1,23 @@
 fileFormatVersion: 2
-guid: a2c8fd77247894a4caab63561b44864c
+guid: 2027adc45cc088046bd590af6999c77f
 ModelImporter:
-  serializedVersion: 24200
+  serializedVersion: 22200
   internalIDToNameTable: []
   externalObjects:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: dummy_material_0.001
-    second: {fileID: 2100000, guid: 9e07b4f796e5b3f40a16c5382fd9795f, type: 2}
+    second: {fileID: 2100000, guid: b42ac74cddddc9143994273d1272951a, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: dummy_material_0.002
-    second: {fileID: 2100000, guid: 9e07b4f796e5b3f40a16c5382fd9795f, type: 2}
+    second: {fileID: 2100000, guid: f48a4d6c11af48840a353facf8dc228a, type: 2}
   materials:
-    materialImportMode: 1
+    materialImportMode: 2
     materialName: 0
-    materialSearch: 1
+    materialSearch: 0
     materialLocation: 1
   animations:
     legacyGenerateAnimations: 4
@@ -66,9 +66,6 @@ ModelImporter:
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
     optimizeBones: 1
-    generateMeshLods: 0
-    meshLodGenerationFlags: 0
-    maximumMeshLod: -1
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8

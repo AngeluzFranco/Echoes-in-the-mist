@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class TrapDamage : MonoBehaviour
 {
-    public float damageAmount = 10f;
+    public int damageAmount = 10;
     public float damageInterval = 1f; // Daño cada 1 segundo
     private float nextDamageTime = 0f;
 

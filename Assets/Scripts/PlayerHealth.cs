@@ -1,137 +1,108 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class PlayerHealth : MonoBehaviour
 {
-    [Header("Health")]
-    public float maxHealth = 100f;
-    public float currentHealth;
+    [Header("Vida del jugador")]
+    public int maxHealth = 100;
+    public int currentHealth;
 
-    [Header("UI")]
-    public HealthUI healthUI;
-
-    [Header("Respawn")]
+    [Header("Spawn del jugador")]
     public Transform spawnPoint;
-    public float invulnerabilitySeconds = 2f;
 
-    // Internal
-    private bool isRespawning = false;
-    private bool isInvulnerable = false;
-    private CharacterController characterController;
-    private Rigidbody rb;
+    [Header("UI de vida")]
+    public HealthUI healthUI;   // ← referencia al script UI
 
-    void Awake()
-    {
-        characterController = GetComponent<CharacterController>();
-        rb = GetComponent<Rigidbody>();
-    }
+    [Header("Fade en muerte")]
+    public FadeScreen fadeScreen;
 
     void Start()
     {
         currentHealth = maxHealth;
-        if (spawnPoint != null)
-            MoveToSpawnImmediate();
 
-        UpdateUI();
-    }
-
-    public void TakeDamage(float amount)
-    {
-        if (isRespawning || isInvulnerable) return;
-
-        currentHealth -= amount;
-        currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
-
-        UpdateUI();
-
-        if (currentHealth <= 0f && !isRespawning)
+        // Buscar spawn automáticamente si no está asignado
+        if (spawnPoint == null)
         {
-            StartCoroutine(HandleRespawn());
-        }
-    }
-
-    private IEnumerator HandleRespawn()
-    {
-        isRespawning = true;
-
-        // Opcional: reproducir animación de muerte, sonido, desactivar controles, etc.
-        // Desactivar control de movimiento (tu sistema de control debe respetar esto)
-        var movement = GetComponent<MonoBehaviour>(); // reemplaza si tienes un script de control
-        // if (movement != null) movement.enabled = false; // Comenta/descomenta según tu proyecto
-
-        // Espera un frame para que otros OnTrigger/OnCollision terminen
-        yield return null;
-        yield return new WaitForSeconds(0.05f);
-
-        // Teletransportar de forma segura según el componente usado
-        MoveToSpawnImmediate();
-
-        // Restaurar salud
-        currentHealth = maxHealth;
-        UpdateUI();
-
-        // Limpiar velocidades si hay Rigidbody
-        if (rb != null)
-        {
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+            GameObject spawnObj = GameObject.Find("SpawnPoint");
+            spawnPoint = spawnObj != null ? spawnObj.transform : transform;
         }
 
-        // Breve invulnerabilidad para no reaparecer y morir instantáneamente
-        isInvulnerable = true;
-        float timer = 0f;
-        while (timer < invulnerabilitySeconds)
-        {
-            timer += Time.deltaTime;
-            yield return null;
-        }
-        isInvulnerable = false;
-
-        // Reactivar controles si fue desactivado
-        // if (movement != null) movement.enabled = true;
-
-        isRespawning = false;
-    }
-
-    private void MoveToSpawnImmediate()
-    {
-        if (spawnPoint == null) return;
-
-        // Si tiene CharacterController, desactívalo antes de mover
-        if (characterController != null)
-        {
-            characterController.enabled = false;
-            transform.position = spawnPoint.position;
-            transform.rotation = spawnPoint.rotation;
-            characterController.enabled = true;
-            // también limpiar el "vertical velocity" u otras variables en tu controlador de movimiento si aplica
-            return;
-        }
-
-        // Si tiene Rigidbody, usar MovePosition si está en modo cinemático, o set position directo
-        if (rb != null)
-        {
-            rb.position = spawnPoint.position;
-            rb.rotation = spawnPoint.rotation;
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-            return;
-        }
-
-        // Caso general
-        transform.position = spawnPoint.position;
-        transform.rotation = spawnPoint.rotation;
-    }
-
-    private void UpdateUI()
-    {
+        // UI inicial
         if (healthUI != null)
             healthUI.UpdateHealth(currentHealth, maxHealth);
     }
 
-    // Método público para forzar respawn desde otro script (ej: GameManager)
-    public void ForceRespawnNow()
+    public void TakeDamage(int damage)
     {
-        if (!isRespawning) StartCoroutine(HandleRespawn());
+        // Evitar llamadas cuando ya estamos en 0
+        if (currentHealth <= 0) return;
+
+        currentHealth -= damage;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
+        Debug.Log("🔥 Daño recibido. Vida actual: " + currentHealth);
+
+        // Actualizar UI
+        if (healthUI != null)
+            healthUI.UpdateHealth(currentHealth, maxHealth);
+
+        if (currentHealth > 0)
+        {
+            RespawnToSpawn();  // NO cura, como pediste
+        }
+        else
+        {
+            StartCoroutine(DieAndReturnMenu());
+        }
+    }
+
+    void RespawnToSpawn()
+    {
+        StartCoroutine(RespawnCoroutine());
+    }
+
+    IEnumerator RespawnCoroutine()
+    {
+        // Si usas CharacterController (MUY IMPORTANTE)
+        CharacterController cc = GetComponent<CharacterController>();
+        if (cc != null) cc.enabled = false;
+
+        // Si usas Rigidbody
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero; // <-- corrección: usar velocity
+            rb.angularVelocity = Vector3.zero;
+            rb.Sleep();
+        }
+
+        // Teletransporte seguro
+        transform.position = spawnPoint.position;
+        transform.rotation = spawnPoint.rotation;
+        yield return new WaitForSeconds(0.05f); // Espera un frame de física
+
+        // Volver a activar
+        if (cc != null) cc.enabled = true;
+
+        Debug.Log("🔁 Respawn asegurado en spawnPoint sin fallar.");
+    }
+
+    IEnumerator DieAndReturnMenu()
+    {
+        Debug.Log("💀 Sin vida → iniciando fade y cargando MainMenu...");
+
+        // Si hay FadeScreen, usamos su coroutine pública
+        if (fadeScreen != null)
+        {
+            // asumimos que FadeAndLoadScene es IEnumerator y carga la escena
+            yield return StartCoroutine(fadeScreen.FadeAndLoadScene("MainMenu"));
+        }
+        else
+        {
+            // Si no hay fade, esperar un pequeño delay y cargar la escena
+            yield return new WaitForSeconds(0.3f);
+            SceneManager.LoadScene("MainMenu");
+        }
     }
 }

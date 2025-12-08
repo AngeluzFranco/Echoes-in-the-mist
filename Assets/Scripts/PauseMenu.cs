@@ -103,7 +103,16 @@ public class PauseMenu : MonoBehaviour
 
     public void Resume()
     {
-        if (isPaused) TogglePause();
+        Debug.Log("[PauseMenu] Resume() llamado. isPaused=" + isPaused + ", pauseUI=" + (pauseUI ? pauseUI.name : "null") + ", _canvasGroup=" + (_canvasGroup ? "sí" : "no"));
+        if (isPaused)
+        {
+            Debug.Log("[PauseMenu] Llamando TogglePause() desde Resume");
+            TogglePause();
+        }
+        else
+        {
+            Debug.LogWarning("[PauseMenu] Resume() llamado pero isPaused ya es false");
+        }
     }
 
     public void HideImmediately()
@@ -125,9 +134,19 @@ public class PauseMenu : MonoBehaviour
 
     public void ExitToMainMenu(string sceneName)
     {
+        Debug.Log("[PauseMenu] ExitToMainMenu llamado. sceneName=" + sceneName + ", isPaused=" + isPaused + ", pauseUI=" + (pauseUI ? pauseUI.name : "null") + ", _canvasGroup=" + (_canvasGroup ? "sí" : "no"));
         Time.timeScale = 1f;
         AudioListener.pause = false;
-        if (!string.IsNullOrEmpty(sceneName)) SceneManager.LoadScene(sceneName);
+        if (!string.IsNullOrEmpty(sceneName)) {
+            Debug.Log("[PauseMenu] Cargando escena: " + sceneName);
+            try {
+                SceneManager.LoadScene(sceneName);
+            } catch (System.Exception ex) {
+                Debug.LogError("[PauseMenu] Error al cargar la escena '" + sceneName + "': " + ex.Message);
+            }
+        } else {
+            Debug.LogWarning("[PauseMenu] Nombre de escena vacío o nulo.");
+        }
     }
 
     public void ExitToDesktop()

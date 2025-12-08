@@ -43,6 +43,8 @@ public class LevelManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         InitializeLevel();
+        // Refuerzo: asegurar que el menú de pausa exista tras cada carga de escena
+        EnsurePauseMenu();
     }
     
     public void InitializeLevel()

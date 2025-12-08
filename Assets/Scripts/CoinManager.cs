@@ -2,27 +2,31 @@ using UnityEngine;
 
 public class CoinManager : MonoBehaviour
 {
+    [SerializeField] private EngraneUI engraneUI;
     public static CoinManager Instance { get; private set; }
     private int coins;
     private int maxCoins = 5;
     public GameObject coinPrefab;
     public Vector3[] coinPositions;
 
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+   
     private void Awake()
     {
         if (Instance) Destroy(Instance.gameObject);
         Instance = this;
 
+        if (engraneUI == null)
+        {
+            engraneUI = FindObjectOfType<EngraneUI>();
+        }
     }
 
     public void AddCoins(int amount)
     {
-        coins += Mathf.Min(maxCoins, coins + amount);
+        coins = Mathf.Min(maxCoins, coins + amount);
         Debug.Log($"Total coins: {coins}");
-
-       
+        if (engraneUI != null)
+            engraneUI.UpdateCoins(coins, maxCoins);
     }
 
     public int GetCoinCount()
@@ -39,11 +43,15 @@ public class CoinManager : MonoBehaviour
     {
         maxCoins = Mathf.Max(0, value);
         if (coins > maxCoins) coins = maxCoins;
+        if (engraneUI != null)
+            engraneUI.UpdateCoins(coins, maxCoins);
     }
 
     public void ResetCoins()
     {
         coins = 0;
+        if (engraneUI != null)
+            engraneUI.UpdateCoins(coins, maxCoins);
     }
 
     void Start()
@@ -57,12 +65,13 @@ public class CoinManager : MonoBehaviour
             }
         }
 
+        if (engraneUI != null)
+            engraneUI.UpdateCoins(coins, maxCoins);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-        
+       
     }
 }

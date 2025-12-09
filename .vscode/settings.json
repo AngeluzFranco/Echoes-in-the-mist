@@ -66,5 +66,5 @@
     "explorer.fileNesting.patterns": {
         "*.sln": "*.csproj"
     },
-    "dotnet.defaultSolution": "Echoes-in-the-mist-Alegria.sln"
+    "dotnet.defaultSolution": "Echoes-in-the-mist-chris.sln"
 }

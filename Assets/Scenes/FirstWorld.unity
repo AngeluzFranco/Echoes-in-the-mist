@@ -3198,53 +3198,9 @@ PrefabInstance:
       propertyPath: blurVolume
       value: 
       objectReference: {fileID: 823973222}
-    - target: {fileID: 5669086375431635056, guid: 90bca10f3975e8b4086bbeb1520e7f70, type: 3}
-      propertyPath: manageCursor
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5803847141147103846, guid: 90bca10f3975e8b4086bbeb1520e7f70, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5803847141147103846, guid: 90bca10f3975e8b4086bbeb1520e7f70, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5803847141147103846, guid: 90bca10f3975e8b4086bbeb1520e7f70, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5803847141147103846, guid: 90bca10f3975e8b4086bbeb1520e7f70, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6347732503199498900, guid: 90bca10f3975e8b4086bbeb1520e7f70, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6347732503199498900, guid: 90bca10f3975e8b4086bbeb1520e7f70, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6347732503199498900, guid: 90bca10f3975e8b4086bbeb1520e7f70, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6347732503199498900, guid: 90bca10f3975e8b4086bbeb1520e7f70, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6756676685961396447, guid: 90bca10f3975e8b4086bbeb1520e7f70, type: 3}
       propertyPath: m_Name
       value: PauseMenuCanva
-      objectReference: {fileID: 0}
-    - target: {fileID: 6756676685961396447, guid: 90bca10f3975e8b4086bbeb1520e7f70, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8562348318021457427, guid: 90bca10f3975e8b4086bbeb1520e7f70, type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

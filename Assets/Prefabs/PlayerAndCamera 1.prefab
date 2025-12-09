@@ -112,7 +112,7 @@ MonoBehaviour:
   target: {fileID: 2609449137708739583}
   offset: {x: 0, y: 2, z: -5}
   cameraTransform: {fileID: 807241326998830161}
-  cameraRotationSpeed: 50
+  cameraRotationSpeed: 250
   minVerticalAngle: -30
   maxVerticalAngle: 60
   isInverted: 0
@@ -1983,7 +1983,7 @@ Transform:
   m_GameObject: {fileID: 4746018162933415561}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.63, y: 1.5, z: 5.91}
+  m_LocalPosition: {x: 93.2, y: 5.4, z: -125.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

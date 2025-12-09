@@ -604,6 +604,7 @@ MonoBehaviour:
   manageCursor: 1
   manageAudio: 1
   blurVolume: {fileID: 0}
+  pauseAction: {fileID: -5879312586291202550, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!1 &8158986700285483803
 GameObject:
   m_ObjectHideFlags: 0

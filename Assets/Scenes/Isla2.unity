@@ -2849,6 +2849,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 08f51adfeea5a724d8bb487d8751e6b9, type: 3}
+--- !u!114 &557393221 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6312039553388117336, guid: 08f51adfeea5a724d8bb487d8751e6b9, type: 3}
+  m_PrefabInstance: {fileID: 557393220}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
 --- !u!4 &569238133 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 217103019681605899, guid: a424a5dee94798b4e852edf7cb90c092, type: 3}
@@ -3146,7 +3157,7 @@ PrefabInstance:
     - target: {fileID: 5669086375431635056, guid: 90bca10f3975e8b4086bbeb1520e7f70, type: 3}
       propertyPath: blurVolume
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 557393221}
     - target: {fileID: 5669086375431635056, guid: 90bca10f3975e8b4086bbeb1520e7f70, type: 3}
       propertyPath: manageCursor
       value: 1

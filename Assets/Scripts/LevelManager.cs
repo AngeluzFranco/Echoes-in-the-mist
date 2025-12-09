@@ -22,7 +22,10 @@ public class LevelManager : MonoBehaviour
         
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        EnsurePauseMenu();
+        if (SceneManager.GetActiveScene().name != "MainMenu")
+        {
+            EnsurePauseMenu();
+        }
     }
     
     private void Start()
@@ -44,7 +47,18 @@ public class LevelManager : MonoBehaviour
     {
         InitializeLevel();
         // Refuerzo: asegurar que el menú de pausa exista tras cada carga de escena
-        EnsurePauseMenu();
+        if (scene.name != "MainMenu")
+        {
+            EnsurePauseMenu();
+        }
+        else
+        {
+            if (pauseMenuInstance)
+            {
+                Destroy(pauseMenuInstance);
+                pauseMenuInstance = null;
+            }
+        }
     }
     
     public void InitializeLevel()
@@ -58,7 +72,7 @@ public class LevelManager : MonoBehaviour
         EnsurePauseMenu();
         
         // Eliminar duplicados si los hay
-        var menus = FindObjectsByType<PauseMenu>(FindObjectsSortMode.None);
+        var menus = FindObjectsByType<PauseScript>(FindObjectsSortMode.None);
         foreach (var m in menus)
         {
             if (pauseMenuInstance && m.gameObject != pauseMenuInstance)
@@ -123,7 +137,7 @@ public class LevelManager : MonoBehaviour
     {
         if (pauseMenuInstance == null)
         {
-            var existing = FindFirstObjectByType<PauseMenu>(FindObjectsInactive.Include);
+            var existing = FindFirstObjectByType<PauseScript>(FindObjectsInactive.Include);
             if (existing)
             {
                 pauseMenuInstance = existing.gameObject;
@@ -134,15 +148,15 @@ public class LevelManager : MonoBehaviour
             }
             if (pauseMenuInstance)
             {
-                var pm = pauseMenuInstance.GetComponent<PauseMenu>();
-                if (pm) pm.HideImmediately();
+                var pm = pauseMenuInstance.GetComponent<PauseScript>();
+                if (pm) pm.Resumir();
                 DontDestroyOnLoad(pauseMenuInstance);
             }
         }
         else
         {
-            var pm = pauseMenuInstance.GetComponent<PauseMenu>();
-            if (pm) pm.HideImmediately();
+            var pm = pauseMenuInstance.GetComponent<PauseScript>();
+            if (pm) pm.Resumir();
         }
     }
     

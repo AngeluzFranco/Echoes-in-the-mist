@@ -1,131 +1,168 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
-using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
 
 public class PauseMenu : MonoBehaviour
 {
-    [Header("UI")]
-    [SerializeField] private GameObject pauseUI;
-
-    [Header("Input System")]
-    [Tooltip("InputSystem_Actions → Player → Pause")]
-    [SerializeField] private InputActionReference pauseAction;
-
-    [Header("Options")]
-    [SerializeField] private bool manageCursor = true;
-    [SerializeField] private bool manageAudio = true;
-
-    [Header("Post Processing")]
-    [SerializeField] private Volume blurVolume;
-
+    
+    public GameObject pauseUI;
     private bool isPaused;
-    private CanvasGroup canvas;
+    [SerializeField] private bool manageCursor = false;
+    [SerializeField] private bool manageAudio = true;
+    public Volume blurVolume;
+    private CanvasGroup _canvasGroup;
 
     private void Awake()
     {
-        Time.timeScale = 1f;
-
-        if (pauseUI)
+        if (pauseUI == gameObject)
         {
-            canvas = pauseUI.GetComponent<CanvasGroup>();
-            if (!canvas) canvas = pauseUI.AddComponent<CanvasGroup>();
-            HideUI();
+            _canvasGroup = GetComponent<CanvasGroup>();
+            if (!_canvasGroup) _canvasGroup = gameObject.AddComponent<CanvasGroup>();
+            _canvasGroup.alpha = 0f;
+            _canvasGroup.interactable = false;
+            _canvasGroup.blocksRaycasts = false;
         }
-
-        if (blurVolume)
-            blurVolume.weight = 0f;
+        else if (pauseUI)
+        {
+            pauseUI.SetActive(false);
+        }
+        if (blurVolume) blurVolume.weight = 0f;
     }
 
     private void OnEnable()
     {
-        if (pauseAction == null)
-        {
-            Debug.LogError("PauseMenu → pauseAction NO asignado");
-            return;
-        }
-
-        pauseAction.action.Enable();
-        pauseAction.action.performed += OnPause;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        ResolveBlurVolume();
     }
 
     private void OnDisable()
     {
-        if (pauseAction == null) return;
-
-        pauseAction.action.performed -= OnPause;
-        pauseAction.action.Disable();
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    private void OnPause(InputAction.CallbackContext ctx)
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        TogglePause();
+        ResolveBlurVolume();
+    }
+
+    private void ResolveBlurVolume()
+    {
+        if (blurVolume && blurVolume.gameObject) return;
+        var vol = FindFirstObjectByType<Volume>(FindObjectsInactive.Include);
+        if (vol) blurVolume = vol;
+        if (blurVolume) blurVolume.weight = 0f;
+    }
+
+    void Update()
+    {
+        var esc = Input.GetKeyDown(KeyCode.Escape);
+#if ENABLE_INPUT_SYSTEM
+        if (!esc)
+        {
+            try
+            {
+                esc = UnityEngine.InputSystem.Keyboard.current != null &&
+                      UnityEngine.InputSystem.Keyboard.current.escapeKey.wasPressedThisFrame;
+            }
+            catch { }
+        }
+#endif
+        if (esc) TogglePause();
+
+        if (isPaused && manageCursor)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
 
     public void TogglePause()
     {
         isPaused = !isPaused;
-
-        if (isPaused)
-            ShowUI();
-        else
-            HideUI();
-
+        if (_canvasGroup)
+        {
+            if (pauseUI) pauseUI.SetActive(true);
+            _canvasGroup.alpha = isPaused ? 1f : 0f;
+            _canvasGroup.interactable = isPaused;
+            _canvasGroup.blocksRaycasts = isPaused;
+        }
+        else if (pauseUI)
+        {
+            pauseUI.SetActive(isPaused);
+        }
         Time.timeScale = isPaused ? 0f : 1f;
-
         if (manageCursor)
         {
             Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
             Cursor.visible = isPaused;
         }
-
-        if (manageAudio)
-            AudioListener.pause = isPaused;
-
-        if (blurVolume)
-            blurVolume.weight = isPaused ? 1f : 0f;
+        if (manageAudio) AudioListener.pause = isPaused;
+        if (blurVolume) blurVolume.weight = isPaused ? 1f : 0f;
     }
 
-    private void ShowUI()
+    public void Resume()
     {
-        pauseUI.SetActive(true);
-        canvas.alpha = 1f;
-        canvas.interactable = true;
-        canvas.blocksRaycasts = true;
-    }
-
-    private void HideUI()
-    {
-        pauseUI.SetActive(false);
-        canvas.alpha = 0f;
-        canvas.interactable = false;
-        canvas.blocksRaycasts = false;
-    }
-
-    public void HideImmediately()
-{
-    isPaused = false;
-    Time.timeScale = 1f;
-
-    if (pauseUI)
-    {
-        pauseUI.SetActive(false);
-
-        if (canvas)
+        Debug.Log("[PauseMenu] Resume() llamado. isPaused=" + isPaused + ", pauseUI=" + (pauseUI ? pauseUI.name : "null") + ", _canvasGroup=" + (_canvasGroup ? "sí" : "no"));
+        if (isPaused)
         {
-            canvas.alpha = 0f;
-            canvas.interactable = false;
-            canvas.blocksRaycasts = false;
+            Debug.Log("[PauseMenu] Llamando TogglePause() desde Resume");
+            TogglePause();
+        }
+        else
+        {
+            Debug.LogWarning("[PauseMenu] Resume() llamado pero isPaused ya es false");
         }
     }
 
-    AudioListener.pause = false;
+    public void HideImmediately()
+    {
+        isPaused = false;
+        if (_canvasGroup)
+        {
+            _canvasGroup.alpha = 0f;
+            _canvasGroup.interactable = false;
+            _canvasGroup.blocksRaycasts = false;
+        }
+        else if (pauseUI)
+        {
+            pauseUI.SetActive(false);
+        }
+        Time.timeScale = 1f;
+        if (manageAudio) AudioListener.pause = false;
+    }
 
-    if (blurVolume)
-        blurVolume.weight = 0f;
+    public void ExitToMainMenu(string sceneName)
+    {
+        Debug.Log("[PauseMenu] ExitToMainMenu llamado. sceneName=" + sceneName + ", isPaused=" + isPaused + ", pauseUI=" + (pauseUI ? pauseUI.name : "null") + ", _canvasGroup=" + (_canvasGroup ? "sí" : "no"));
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
+        if (!string.IsNullOrEmpty(sceneName)) {
+            Debug.Log("[PauseMenu] Cargando escena: " + sceneName);
+            try {
+                SceneManager.LoadScene(sceneName);
+            } catch (System.Exception ex) {
+                Debug.LogError("[PauseMenu] Error al cargar la escena '" + sceneName + "': " + ex.Message);
+            }
+        } else {
+            Debug.LogWarning("[PauseMenu] Nombre de escena vacío o nulo.");
+        }
+    }
 
-    Cursor.lockState = CursorLockMode.Locked;
-    Cursor.visible = false;
-}
+    public void ExitToDesktop()
+    {
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
 
+    private void OnDestroy()
+    {
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
+    }
 }
